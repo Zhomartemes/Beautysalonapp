@@ -30,7 +30,7 @@ class BeautyProcedure {
 class User {
     private String name;
     private double balance;
-    private ArrayList<String> bookedProcedures;
+    public ArrayList<String> bookedProcedures;
     private UserType userType;
 
     public enum UserType {
@@ -52,12 +52,14 @@ class User {
         return balance;
     }
 
-    public ArrayList<String> getBookedProcedures() {
-        return bookedProcedures;
-    }
+
 
     public UserType getUserType() {
         return userType;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     public void bookProcedure(String procedureName) {
@@ -69,6 +71,32 @@ class User {
     }
 }
 
+class VIP extends User {
+    public VIP(String name, double balance) {
+        super(name, balance, UserType.VIP);
+    }
+
+    public void bookProcedure(String procedureName) {
+        bookedProcedures.add(procedureName);
+    }
+}
+
+class Ordinary extends User {
+    public Ordinary(String name, double balance) {
+        super(name, balance, UserType.ORDINARY);
+    }
+    // @Override
+    public void bookProcedure(BeautyProcedure procedure) {
+        bookedProcedures.add(procedure.getName());
+        if (getBalance() >= procedure.getPrice()) {
+            setBalance(getBalance() - procedure.getPrice());
+            System.out.println("Booking successful! Balance: $" + getBalance());
+        } else {
+            System.out.println("Insufficient balance. Please recharge your account.");
+        }
+    }
+
+}
 
 class Booking {
     private static int nextId = 1;
@@ -129,19 +157,25 @@ class BeautySalon {
     }
 
     public void bookProcedure(User user, BeautyProcedure procedure, String date, String time) {
-        if (user.getBalance() >= procedure.getPrice() || user.getUserType() == User.UserType.VIP) {
+        if (user.getUserType() == User.UserType.VIP) {
+            ((VIP) user).bookProcedure(procedure.getName());
+            bookingHistory.add(new Booking(procedure.getName(), date, time));
+            System.out.println("Booking successful! Balance: $" + user.getBalance());
+        } else if (user.getUserType() == User.UserType.ORDINARY) {
             if (!isBookingConflict(procedure, date, time)) {
-                user.bookProcedure(procedure.getName());
+                ((Ordinary) user).bookProcedure(procedure.getName());
                 bookingHistory.add(new Booking(procedure.getName(), date, time));
-                System.out.println("Booking successful!");
+                user.setBalance(user.getBalance() - procedure.getPrice());
+                System.out.println("Booking successful! Balance: $" + user.getBalance());
             } else {
                 System.out.println("Invalid date, the procedure has been already booked. " +
                         "You may book for the next hour or day.");
             }
         } else {
-            System.out.println("Insufficient balance. Please recharge your account.");
+            System.out.println("Invalid user type.");
         }
     }
+
     private boolean isBookingConflict(BeautyProcedure procedure, String date, String time) {
         for (Booking booking : bookingHistory) {
             if (booking.getProcedureName().equals(procedure.getName()) &&
@@ -166,11 +200,11 @@ class BeautySalon {
         return Math.abs(bookedSeconds - newSeconds) < 3600;
     }
 
-
     public void cancelBooking(User user, BeautyProcedure procedure) {
         user.cancelProcedure(procedure.getName());
         System.out.println("Booking canceled successfully.");
     }
+
     public ArrayList<BeautyProcedure> getProcedures() {
         return procedures;
     }
@@ -184,18 +218,18 @@ public class BeautySalonApp {
     public static void main(String[] args) {
         BeautySalon beautySalon = new BeautySalon();
 
-        BeautyProcedure vip = new BeautyProcedure("VIP", 10, "Hair cuts ");
-        BeautyProcedure ordinary = new BeautyProcedure("Ordinary", 20, "Bald Haircut");
+        BeautyProcedure vip = new BeautyProcedure("VIP", 20, "Hair cuts ");
+        BeautyProcedure ordinary = new BeautyProcedure("Ordinary", 10, "Bald Haircut");
 
         beautySalon.addProcedure(vip);
         beautySalon.addProcedure(ordinary);
 
         User vipUser = new User("VIP Kazashka", 0.0, User.UserType.VIP);
-
         User ordinaryUser = new User("Ordinary Kazashka", 0, User.UserType.ORDINARY);
 
         beautySalon.addUser(vipUser);
         beautySalon.addUser(ordinaryUser);
+
 
         Scanner scanner = new Scanner(System.in);
 
@@ -239,7 +273,7 @@ public class BeautySalonApp {
                     System.out.print("Enter user type (1 for VIP, 2 for ORDINARY): ");
                     User.UserType newUserType = scanner.nextInt() == 1 ? User.UserType.VIP : User.UserType.ORDINARY;
 
-                    User newUser = new User(newUserName, newUserBalance, newUserType);
+                    User newUser = newUserType == User.UserType.VIP ? new VIP(newUserName, newUserBalance) : new Ordinary(newUserName, newUserBalance);
                     beautySalon.addUser(newUser);
                     break;
                 case 4:
