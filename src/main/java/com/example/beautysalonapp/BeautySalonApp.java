@@ -113,7 +113,8 @@ class OrdinaryUser extends User {
     @Override
     public void bookProcedure(String procedureName) {
         double procedurePrice = getProcedurePrice(procedureName, connection);
-        if (getBalance() >= procedurePrice) {
+
+        if (procedurePrice > 0 && getBalance() >= procedurePrice) {
             getBookedProcedures().add(procedureName);
             setBalance(getBalance() - procedurePrice);
             System.out.println("Booking successful!");
@@ -126,7 +127,24 @@ class OrdinaryUser extends User {
                 System.out.println("Booking details not available.");
             }
         } else {
-            System.out.println("Insufficient balance. Please recharge your account.");
+            if (procedurePrice <= 0) {
+                System.out.println("Procedure not found.");
+            } else {
+                System.out.println("Insufficient balance. Please recharge your account.");
+            }
+        }
+    }
+
+
+    @Override
+    public void saveToDatabase(Connection connection) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO users (name, balance, user_type) VALUES (?, ?, ?) " +
+                        "ON CONFLICT (name) DO UPDATE SET balance = EXCLUDED.balance")) {
+            statement.setString(1, getName());
+            statement.setDouble(2, getBalance());
+            statement.setString(3, getUserType().name());
+            statement.executeUpdate();
         }
     }
 
@@ -138,6 +156,7 @@ class OrdinaryUser extends User {
         }
         return 0.0;
     }
+
 
     private Booking getBookingByProcedureName(String procedureName) {
         for (Booking booking : BeautySalon.getBookingHistory(connection)) {
@@ -159,7 +178,13 @@ class OrdinaryUser extends User {
 
     public void setBalance(double balance) {
         this.balance = balance;
+        try {
+            saveToDatabase(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 
     public double getBalance() {
         return balance;
@@ -317,10 +342,10 @@ class BeautySalon {
         ArrayList<BeautyProcedure> procedureList = getProcedures(connection);
 
         System.out.println("Beauty Procedures List:");
-        System.out.printf("%-20s %-10s %-50s%n", "Name", "Price", "Description");
+        System.out.printf("%-20s %-15s %-50s%n", "Name", "Price", "Description");
 
         for (BeautyProcedure procedure : procedureList) {
-            System.out.printf("%-20s %-10s %-50s%n", procedure.getName(), procedure.getPrice(), procedure.getDescription());
+            System.out.printf("%-20s %-15s %-50s%n", procedure.getName(), procedure.getPrice(), procedure.getDescription());
         }
     }
 
@@ -350,30 +375,55 @@ class BeautySalon {
     }
 
     public static void cancelBooking(int bookingId, Connection connection) {
-        for (Booking booking : bookingHistory) {
-            if (booking.getId() == bookingId) {
-                String procedureName = booking.getProcedureName();
-                String userName = booking.getUserName();
+        Booking bookingToRemove = getBookingById(bookingId, connection);
 
-                try {
-                    try (PreparedStatement statement = connection.prepareStatement(
-                            "DELETE FROM bookings WHERE id = ?")) {
-                        statement.setInt(1, bookingId);
-                        statement.executeUpdate();
-                    }
+        if (bookingToRemove != null) {
+            String procedureName = bookingToRemove.getProcedureName();
+            String userName = bookingToRemove.getUserName();
 
-                    System.out.println("Booking canceled successfully.");
-                } catch (SQLException e) {
-                    e.printStackTrace();
+            try {
+                try (PreparedStatement statement = connection.prepareStatement(
+                        "DELETE FROM bookings WHERE id = ?")) {
+                    statement.setInt(1, bookingId);
+                    statement.executeUpdate();
                 }
 
-                return;
+                bookingHistory.remove(bookingToRemove);
+                System.out.println("Booking canceled successfully.");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Booking not found for the specified ID.");
+        }
+    }
+
+    private static Booking getBookingById(int bookingId, Connection connection) {
+        for (Booking booking : bookingHistory) {
+            if (booking.getId() == bookingId) {
+                return booking;
             }
         }
 
-        System.out.println("Booking not found for the specified ID.");
-    }
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM bookings WHERE id = ?")) {
+            statement.setInt(1, bookingId);
+            ResultSet resultSet = statement.executeQuery();
 
+            if (resultSet.next()) {
+                String procedureName = resultSet.getString("procedure_name");
+                String date = resultSet.getString("date");
+                String time = resultSet.getString("time");
+                String userName = resultSet.getString("user_name");
+
+                return new Booking(procedureName, date, time, userName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
     public static void bookProcedure(User user, BeautyProcedure procedure, String date, String time, Connection connection) {
         if (!isBookingConflict(procedure, date, time)) {
             if (user.getUserType() == User.UserType.VIP) {
