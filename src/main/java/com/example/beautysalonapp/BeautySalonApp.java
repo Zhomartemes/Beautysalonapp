@@ -430,6 +430,55 @@ class BeautySalon {
 
         return Math.abs(bookedTimeInMinutes - newTimeInMinutes) < PROCEDURE_DURATION_HOURS * 60;
     }
+    public static void updateProcedurePrice(String procedureName, double newPrice, Connection connection) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "UPDATE procedures SET price = ? WHERE name = ?")) {
+            statement.setDouble(1, newPrice);
+            statement.setString(2, procedureName);
+            statement.executeUpdate();
+            System.out.println("Procedure updated successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateUserName(String oldName, String newName, Connection connection) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "UPDATE users SET name = ? WHERE name = ?")) {
+            statement.setString(1, newName);
+            statement.setString(2, oldName);
+            statement.executeUpdate();
+            System.out.println("User updated successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateUserBalance(String userName, double newBalance, Connection connection) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "UPDATE users SET balance = ? WHERE name = ?")) {
+            statement.setDouble(1, newBalance);
+            statement.setString(2, userName);
+            statement.executeUpdate();
+            System.out.println("User balance updated successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateBookingDateAndTime(int bookingId, String newDate, String newTime, Connection connection) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "UPDATE bookings SET date = ?, time = ? WHERE id = ?")) {
+            statement.setString(1, newDate);
+            statement.setString(2, newTime);
+            statement.setInt(3, bookingId);
+            statement.executeUpdate();
+            System.out.println("Booking date and time updated successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         try {
@@ -450,6 +499,9 @@ class BeautySalon {
                 System.out.println("4) To book for a beauty procedure;");
                 System.out.println("5) To cancel booking for a beauty procedure;");
                 System.out.println("6) To show booking history;");
+                System.out.println("7) To update a procedure;");
+                System.out.println("8) To update a user;");
+                System.out.println("9) To update booking date and time;");
                 System.out.println("0) Exit");
 
                 System.out.print("Enter your choice: ");
@@ -538,6 +590,39 @@ class BeautySalon {
                     case 6:
                         beautySalon.showBookings(connection);
                         break;
+                    case 7:
+                        System.out.print("Enter procedure name to update: ");
+                        String procedureToUpdate = scanner.next();
+                        System.out.print("Enter new price: ");
+                        double updatedProcedurePrice = scanner.nextDouble();
+                        updateProcedurePrice(procedureToUpdate, updatedProcedurePrice, connection);
+                        break;
+
+
+                    case 8:
+                        System.out.print("Enter user name to update: ");
+                        String userToUpdate = scanner.next();
+                        System.out.print("Enter new user name: ");
+                        String updatedUserName = scanner.next();
+                        updateUserName(userToUpdate, updatedUserName, connection);
+                        System.out.print("Do you want to update the balance? (Y/N): ");
+                        String updateBalanceChoice = scanner.next();
+                        if (updateBalanceChoice.equalsIgnoreCase("Y")) {
+                            System.out.print("Enter new balance: ");
+                            double newBalance = scanner.nextDouble();
+                            updateUserBalance(updatedUserName, newBalance, connection);
+                        }
+                        break;
+                    case 9:
+                        System.out.print("Enter booking ID to update: ");
+                        int bookingIdToUpdate = scanner.nextInt();
+                        System.out.print("Enter new date (dd/mm/yyyy): ");
+                        String newDate = scanner.next();
+                        System.out.print("Enter new time (hh:mm): ");
+                        String newTime = scanner.next();
+                        updateBookingDateAndTime(bookingIdToUpdate, newDate, newTime, connection);
+                        break;
+
                     case 0:
                         System.out.println("Exiting...");
                         break;

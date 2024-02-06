@@ -5,14 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6333f035-00a2-4d5b-a3cc-442599f7ce1c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqlDataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/bd.QgwAAA.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/bd.QgwAAA/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/bd.QgwAAA/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/bd.QgwAAA/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/beauty.fBD4rA.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/beauty.fBD4rA/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/beauty.fBD4rA/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/db.fgwAAA.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/db.fgwAAA/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/db.fgwAAA/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/postgres.edMnLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/postgres.edMnLQ/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1a4c4282-dec6-4039-b694-3e8ec2907e00/storage_v2/_src_/database/postgres.edMnLQ/schema/pg_catalog.0S1ZNQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/ee238619-aaa6-4740-a8a4-2690a56c270d.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/ee238619-aaa6-4740-a8a4-2690a56c270d.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/beautysalonapp/BeautySalonApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/beautysalonapp/BeautySalonApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/beautysalonapp/HelloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/beautysalonapp/HelloController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/beautysalonapp/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/beautysalonapp/hello-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,33 +47,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.BeautySalon.executor": "Run",
-    "Application.BeautySalonApp.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Jomart/Desktop/BeautySalonApp/postgresql-42.7.1.jar",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.BeautySalon.executor&quot;: &quot;Run&quot;,
+    &quot;Application.BeautySalonApp.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Jomart/Desktop/BeautySalonApp/postgresql-42.7.1.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -85,7 +94,9 @@
       <workItem from="1705377615868" duration="5080000" />
       <workItem from="1705387263215" duration="23000" />
       <workItem from="1705949310911" duration="3789000" />
-      <workItem from="1707143516082" duration="12861000" />
+      <workItem from="1707143516082" duration="13029000" />
+      <workItem from="1707157070308" duration="3000" />
+      <workItem from="1707185958778" duration="878000" />
     </task>
     <servers />
   </component>
@@ -93,8 +104,18 @@
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="038f02b4-ca77-4ab4-acca-7459f343184f" value="TOOL_WINDOW" />
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
+        <entry key="038f02b4-ca77-4ab4-acca-7459f343184f">
+          <value>
+            <State />
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State />
