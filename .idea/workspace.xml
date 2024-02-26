@@ -36,6 +36,7 @@
   &quot;keyToString&quot;: {
     &quot;Application.BeautySalon.executor&quot;: &quot;Run&quot;,
     &quot;Application.BeautySalonApp.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
@@ -82,7 +83,12 @@
       <workItem from="1707143516082" duration="13029000" />
       <workItem from="1707157070308" duration="3000" />
       <workItem from="1707185958778" duration="878000" />
-      <workItem from="1707187732190" duration="3285000" />
+      <workItem from="1707187732190" duration="4850000" />
+      <workItem from="1707799203845" duration="2038000" />
+      <workItem from="1708402002515" duration="90000" />
+      <workItem from="1708515363887" duration="432000" />
+      <workItem from="1708515808589" duration="34000" />
+      <workItem from="1708891053917" duration="615000" />
     </task>
     <servers />
   </component>

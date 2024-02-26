@@ -40,9 +40,10 @@ class BeautyProcedure {
 
 class User {
     private String name;
-    double balance;
+    protected double balance;
     private ArrayList<String> bookedProcedures;
     private UserType userType;
+    private Connection connection;
 
     public enum UserType {
         ORDINARY, VIP
@@ -88,34 +89,12 @@ class User {
             statement.executeUpdate();
         }
     }
-}
 
-class VipUser extends User {
-    public VipUser(String name) {
-        super(name, 0.0, UserType.VIP);
-    }
-
-    @Override
-    public void bookProcedure(String procedureName) {
-        getBookedProcedures().add(procedureName);
-        System.out.println("Booking successful!");
-    }
-}
-
-class OrdinaryUser extends User {
-    private Connection connection;
-
-    public OrdinaryUser(String name, double balance, Connection connection) {
-        super(name, balance, UserType.ORDINARY);
-        this.connection = connection;
-    }
-
-    @Override
-    public void bookProcedure(String procedureName) {
+    public void handleBooking(String procedureName, Connection connection) {
         double procedurePrice = getProcedurePrice(procedureName, connection);
 
         if (procedurePrice > 0 && getBalance() >= procedurePrice) {
-            getBookedProcedures().add(procedureName);
+            bookProcedure(procedureName);
             setBalance(getBalance() - procedurePrice);
             System.out.println("Booking successful!");
 
@@ -135,20 +114,7 @@ class OrdinaryUser extends User {
         }
     }
 
-
-    @Override
-    public void saveToDatabase(Connection connection) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO users (name, balance, user_type) VALUES (?, ?, ?) " +
-                        "ON CONFLICT (name) DO UPDATE SET balance = EXCLUDED.balance")) {
-            statement.setString(1, getName());
-            statement.setDouble(2, getBalance());
-            statement.setString(3, getUserType().name());
-            statement.executeUpdate();
-        }
-    }
-
-    private double getProcedurePrice(String procedureName, Connection connection) {
+    protected double getProcedurePrice(String procedureName, Connection connection) {
         for (BeautyProcedure procedure : BeautySalon.getProcedures(connection)) {
             if (procedure.getName().equals(procedureName)) {
                 return procedure.getPrice();
@@ -156,7 +122,6 @@ class OrdinaryUser extends User {
         }
         return 0.0;
     }
-
 
     private Booking getBookingByProcedureName(String procedureName) {
         for (Booking booking : BeautySalon.getBookingHistory(connection)) {
@@ -185,8 +150,106 @@ class OrdinaryUser extends User {
         }
     }
 
+    public double getBalance(Connection connection) {
+        return balance;
+    }
+}
 
-    public double getBalance() {
+
+class VipUser extends User {
+    public VipUser(String name) {
+        super(name, 0.0, UserType.VIP);
+    }
+
+    @Override
+    public void handleBooking(String procedureName, Connection connection) {
+        getBookedProcedures().add(procedureName);
+        System.out.println("Booking successful!");
+    }
+}
+
+class OrdinaryUser extends User {
+    private Connection connection;
+
+    public OrdinaryUser(String name, double balance, Connection connection) {
+        super(name, balance, UserType.ORDINARY);
+        this.connection = connection;
+    }
+
+    @Override
+    public void handleBooking(String procedureName, Connection connection) {
+        double procedurePrice = getProcedurePrice(procedureName, connection);
+
+        if (procedurePrice > 0 && getBalance(connection) >= procedurePrice) {
+            getBookedProcedures().add(procedureName);
+            setBalance(getBalance(connection) - procedurePrice, connection);
+            System.out.println("Booking successful!");
+
+            Booking booking = getBookingByProcedureName(procedureName, connection);
+
+            if (booking != null) {
+                printBookingDetails(booking);
+            } else {
+                System.out.println("Booking details not available.");
+            }
+        } else {
+            if (procedurePrice <= 0) {
+                System.out.println("Procedure not found.");
+            } else {
+                System.out.println("Insufficient balance. Please recharge your account.");
+            }
+        }
+    }
+
+    @Override
+    public void saveToDatabase(Connection connection) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO users (name, balance, user_type) VALUES (?, ?, ?) " +
+                        "ON CONFLICT (name) DO UPDATE SET balance = EXCLUDED.balance")) {
+            statement.setString(1, getName());
+            statement.setDouble(2, getBalance(connection));
+            statement.setString(3, getUserType().name());
+            statement.executeUpdate();
+        }
+    }
+
+    protected double getProcedurePrice(String procedureName, Connection connection) {
+        for (BeautyProcedure procedure : BeautySalon.getProcedures(connection)) {
+            if (procedure.getName().equals(procedureName)) {
+                return procedure.getPrice();
+            }
+        }
+        return 0.0;
+    }
+
+    private Booking getBookingByProcedureName(String procedureName, Connection connection) {
+        for (Booking booking : BeautySalon.getBookingHistory(connection)) {
+            if (booking.getProcedureName().equals(procedureName)) {
+                return booking;
+            }
+        }
+        return null;
+    }
+
+    private static void printBookingDetails(Booking booking) {
+        System.out.println("Booking details:");
+        System.out.println("ID: " + booking.getId());
+        System.out.println("Procedure Name: " + booking.getProcedureName());
+        System.out.println("Date: " + booking.getDate());
+        System.out.println("Time: " + booking.getTime());
+        System.out.println("User Name: " + booking.getUserName());
+    }
+
+    public void setBalance(double balance, Connection connection) {
+        this.balance = balance;
+        try {
+            saveToDatabase(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public double getBalance(Connection connection) {
         return balance;
     }
 }
@@ -304,7 +367,6 @@ class BeautySalon {
                 } else {
                     user = new OrdinaryUser(name, balance, connection);
                 }
-
                 userList.add(user);
             }
 
