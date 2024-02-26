@@ -4,10 +4,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 class BeautySalon {
+    private static BeautySalon instance;
     private static final int PROCEDURE_DURATION_HOURS = 1;
     private static ArrayList<BeautyProcedure> procedures = new ArrayList<>();
     private static ArrayList<User> users = new ArrayList<>();
     private static ArrayList<Booking> bookingHistory = new ArrayList<>();
+
+    private BeautySalon() {}
+
+    public static BeautySalon getInstance() {
+        if (instance == null) {
+            instance = new BeautySalon();
+        }
+        return instance;
+    }
+
 
     public static void addProcedure(BeautyProcedure procedure, Connection connection) {
         procedures.add(procedure);
