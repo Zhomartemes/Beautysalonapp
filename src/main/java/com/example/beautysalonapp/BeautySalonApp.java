@@ -109,7 +109,7 @@ class CommandInvoker {
     public void undo() {
         if (currentCommandIndex >= 0) {
             Command lastCommand = commandHistory.get(currentCommandIndex);
-            lastCommand.undo(); // Assuming each command has an undo method
+            lastCommand.undo();
             currentCommandIndex--;
         } else {
             System.out.println("Nothing to undo.");
