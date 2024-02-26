@@ -2,7 +2,131 @@ package com.example.beautysalonapp;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+
+interface Command {
+    void execute();
+    void undo();
+}
+
+class AddProcedureCommand implements Command {
+    private final BeautyProcedure procedure;
+    private final Connection connection;
+
+    public AddProcedureCommand(BeautyProcedure procedure, Connection connection) {
+        this.procedure = procedure;
+        this.connection = connection;
+    }
+
+    @Override
+    public void execute() {
+        BeautySalon.addProcedure(procedure, connection);
+    }
+
+    @Override
+    public void undo() {
+
+    }
+}
+
+class AddUserCommand implements Command {
+    private final User user;
+    private final Connection connection;
+
+    public AddUserCommand(User user, Connection connection) {
+        this.user = user;
+        this.connection = connection;
+    }
+
+    @Override
+    public void execute() {
+        BeautySalon.addUser(user, connection);
+    }
+
+    @Override
+    public void undo() {
+
+    }
+}
+
+class BookProcedureCommand implements Command {
+    private final User user;
+    private final BeautyProcedure procedure;
+    private final String date;
+    private final String time;
+    private final Connection connection;
+
+    public BookProcedureCommand(User user, BeautyProcedure procedure, String date, String time, Connection connection) {
+        this.user = user;
+        this.procedure = procedure;
+        this.date = date;
+        this.time = time;
+        this.connection = connection;
+    }
+
+    @Override
+    public void execute() {
+        BeautySalon.bookProcedure(user, procedure, date, time, connection);
+    }
+
+    @Override
+    public void undo() {
+
+    }
+}
+
+class CancelBookingCommand implements Command {
+    private final int bookingId;
+    private final Connection connection;
+
+    public CancelBookingCommand(int bookingId, Connection connection) {
+        this.bookingId = bookingId;
+        this.connection = connection;
+    }
+
+    @Override
+    public void execute() {
+        BeautySalon.cancelBooking(bookingId, connection);
+    }
+
+    @Override
+    public void undo() {
+
+    }
+}
+
+class CommandInvoker {
+    private final List<Command> commandHistory = new ArrayList<>();
+    private int currentCommandIndex = -1;
+
+    public void executeCommand(Command command) {
+        command.execute();
+        commandHistory.add(command);
+        currentCommandIndex++;
+    }
+
+    public void undo() {
+        if (currentCommandIndex >= 0) {
+            Command lastCommand = commandHistory.get(currentCommandIndex);
+            lastCommand.undo(); // Assuming each command has an undo method
+            currentCommandIndex--;
+        } else {
+            System.out.println("Nothing to undo.");
+        }
+    }
+
+    public void redo() {
+        if (currentCommandIndex < commandHistory.size() - 1) {
+            currentCommandIndex++;
+            Command nextCommand = commandHistory.get(currentCommandIndex);
+            nextCommand.execute();
+        } else {
+            System.out.println("Nothing to redo.");
+        }
+    }
+}
+
 class BeautySalon {
     private static BeautySalon instance;
     private static final int PROCEDURE_DURATION_HOURS = 1;
