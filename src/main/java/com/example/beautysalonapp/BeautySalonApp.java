@@ -187,16 +187,15 @@ class VipUser extends User implements UserInterface {
 }
 
 class OrdinaryUserCreator extends UserCreator {
-    private Connection connection; // Add a Connection field
+    private Connection connection;
 
-    // Constructor to initialize the Connection field
     public OrdinaryUserCreator(Connection connection) {
         this.connection = connection;
     }
 
     @Override
     public User createUser(String name, double balance) {
-        return new OrdinaryUser(name, balance, connection); // Pass connection to OrdinaryUser constructor
+        return new OrdinaryUser(name, balance, connection);
     }
 }
 
@@ -399,7 +398,7 @@ class BeautySalon {
 
                 User user;
                 if (userType == User.UserType.VIP) {
-                    user = new VipUser(name, balance); // Pass balance to VipUser constructor
+                    user = new VipUser(name, balance);
                 } else {
                     user = new OrdinaryUser(name, balance, connection);
                 }
@@ -636,7 +635,7 @@ class BeautySalon {
             createTables(connection);
 
             UserCreator vipUserCreator = new VipUserCreator();
-            UserCreator ordinaryUserCreator = new OrdinaryUserCreator(connection); // Pass connection to constructor
+            UserCreator ordinaryUserCreator = new OrdinaryUserCreator(connection);
 
             BeautySalon beautySalon = new BeautySalon();
 
@@ -687,7 +686,7 @@ class BeautySalon {
 
                         User newUser;
                         if (newUserType == User.UserType.VIP) {
-                            newUser = new VipUser(newUserName, newUserBalance); // Pass balance to VipUser constructor
+                            newUser = new VipUser(newUserName, newUserBalance);
                         } else {
                             newUser = new OrdinaryUser(newUserName, newUserBalance, connection);
                         }
