@@ -37,6 +37,17 @@ class BeautyProcedure {
         }
     }
 }
+interface UserInterface {
+    void saveToDatabase(Connection connection) throws SQLException;
+}
+
+abstract class UserCreator {
+    public abstract User createUser(String name, double balance);
+
+    public void saveUserToDatabase(User user, Connection connection) throws SQLException {
+        user.saveToDatabase(connection);
+    }
+}
 
 class User {
     private String name;
@@ -155,10 +166,17 @@ class User {
     }
 }
 
+class VipUserCreator extends UserCreator {
+    @Override
+    public User createUser(String name, double balance) {
+        return new VipUser(name, balance);
+    }
+}
 
-class VipUser extends User {
-    public VipUser(String name) {
-        super(name, 0.0, UserType.VIP);
+
+class VipUser extends User implements UserInterface {
+    public VipUser(String name, double balance) {
+        super(name, balance, UserType.VIP);
     }
 
     @Override
@@ -168,7 +186,22 @@ class VipUser extends User {
     }
 }
 
-class OrdinaryUser extends User {
+class OrdinaryUserCreator extends UserCreator {
+    private Connection connection; // Add a Connection field
+
+    // Constructor to initialize the Connection field
+    public OrdinaryUserCreator(Connection connection) {
+        this.connection = connection;
+    }
+
+    @Override
+    public User createUser(String name, double balance) {
+        return new OrdinaryUser(name, balance, connection); // Pass connection to OrdinaryUser constructor
+    }
+}
+
+
+class OrdinaryUser extends User implements UserInterface{
     private Connection connection;
 
     public OrdinaryUser(String name, double balance, Connection connection) {
@@ -253,6 +286,9 @@ class OrdinaryUser extends User {
         return balance;
     }
 }
+
+
+
 
 class Booking {
     private static int nextId = 1;
@@ -363,12 +399,13 @@ class BeautySalon {
 
                 User user;
                 if (userType == User.UserType.VIP) {
-                    user = new VipUser(name);
+                    user = new VipUser(name, balance); // Pass balance to VipUser constructor
                 } else {
                     user = new OrdinaryUser(name, balance, connection);
                 }
                 userList.add(user);
             }
+
 
             return userList;
         } catch (SQLException e) {
@@ -598,10 +635,12 @@ class BeautySalon {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bd", "postgres", "1234");
             createTables(connection);
 
+            UserCreator vipUserCreator = new VipUserCreator();
+            UserCreator ordinaryUserCreator = new OrdinaryUserCreator(connection); // Pass connection to constructor
+
             BeautySalon beautySalon = new BeautySalon();
 
             Scanner scanner = new Scanner(System.in);
-
             int choice;
             do {
                 System.out.println("Hello! You have the following available functions:");
@@ -648,13 +687,14 @@ class BeautySalon {
 
                         User newUser;
                         if (newUserType == User.UserType.VIP) {
-                            newUser = new VipUser(newUserName);
+                            newUser = new VipUser(newUserName, newUserBalance); // Pass balance to VipUser constructor
                         } else {
                             newUser = new OrdinaryUser(newUserName, newUserBalance, connection);
                         }
 
                         BeautySalon.addUser(newUser, connection);
                         break;
+
                     case 4:
                         System.out.print("Enter user name: ");
                         String userName = scanner.next();
